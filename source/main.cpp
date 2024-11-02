@@ -1,5 +1,10 @@
 #include <SDL2/SDL.h>
 
+#include <chrono>
+#include <iostream>
+#include <rasterizer/renderer.hpp>
+using namespace rasterizer;
+
 int main() {
   SDL_Init(SDL_INIT_VIDEO);
 
@@ -10,8 +15,12 @@ int main() {
       "tiny rasterizer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
       width, height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
   SDL_Surface* draw_surface = nullptr;
+
   int mouse_x = 0;
   int mouse_y = 0;
+
+  using clock = std::chrono::high_resolution_clock;
+  auto last_frame_start = clock::now();
 
   bool running = true;
   while (running) {
@@ -46,12 +55,21 @@ int main() {
       SDL_SetSurfaceBlendMode(draw_surface, SDL_BLENDMODE_NONE);
     }
 
+    auto now = clock::now();
+    float dt = std::chrono::duration_cast<std::chrono::duration<float>>(
+                   now - last_frame_start)
+                   .count();
+    last_frame_start = now;
+    std::cout << dt << std::endl;
+
+    image_view color_buffer{
+        .pixels = (color4ub*)draw_surface->pixels,
+        .width = (std::uint32_t)width,
+        .height = (std::uint32_t)height,
+    };
+    clear(color_buffer, {0.8f, 0.9f, 1.f, 1.f});
     SDL_Rect rect{.x = 0, .y = 0, .w = width, .h = height};
     SDL_BlitSurface(draw_surface, &rect, SDL_GetWindowSurface(window), &rect);
-    uint32_t color = 0xffffdfdf;
-    // for (int i = 0; i < width * height; ++i)
-    //   ((uint32_t*)(draw_surface->pixels))[i] = color;
-    std::fill_n((uint32_t*)draw_surface->pixels, width * height, color);
     SDL_UpdateWindowSurface(window);
   }
 }

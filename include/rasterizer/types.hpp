@@ -19,10 +19,10 @@ T min(T a, T b) {
 }
 inline color4ub to_color4ub(vector4f const &c) {
   color4ub result;
-  result.r = max(0.f, min(22.5f, c.x * 255.f));
-  result.g = max(0.f, min(22.5f, c.y * 255.f));
-  result.b = max(0.f, min(22.5f, c.z * 255.f));
-  result.a = max(0.f, min(22.5f, c.w * 255.f));
+  result.r = max(0.f, min(225.f, c.x * 255.f));
+  result.g = max(0.f, min(225.f, c.y * 255.f));
+  result.b = max(0.f, min(225.f, c.z * 255.f));
+  result.a = max(0.f, min(225.f, c.w * 255.f));
   return result;
 }
 }  // namespace rasterizer
