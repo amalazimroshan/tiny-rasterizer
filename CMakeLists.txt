@@ -19,5 +19,5 @@ target_include_directories(tiny-rasterizer PUBLIC
 )
 
 target_link_libraries(tiny-rasterizer PUBLIC
-    ${SDL2_LIBRARIES}    
+    ${SDL2_LIBRARIES}
 )
