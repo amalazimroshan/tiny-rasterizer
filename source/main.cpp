@@ -68,6 +68,30 @@ int main() {
         .height = (std::uint32_t)height,
     };
     clear(color_buffer, {0.8f, 0.9f, 1.f, 1.f});
+
+    vector3f vertices[] = {
+        {0.f, 0.f, 0.f},
+        {100.f, 0.f, 0.f},
+        {0.f, 100.f, 0.f},
+    };
+    for (int i = 0; i < 100; ++i) {
+      draw(
+          color_buffer,
+          draw_command{.mesh =
+                           {
+                               .positions = vertices,
+                               .vertex_count = 3,
+                               .color = {static_cast<float>((i % 3) == 0),
+                                         static_cast<float>((i % 3) == 1),
+                                         static_cast<float>((i % 3) == 2), 1.f},
+                           },
+                       .transform = {
+                           1.f, 0.f, 0.f, mouse_x + 100.f * (i % 10),  //
+                           0.f, 1.f, 0.f, mouse_y + 100.f * (i / 10),  //
+                           0.f, 0.f, 1.f, 0.f,                         //
+                           0.f, 0.f, 0.f, 1.f,                         //
+                       }});
+    }
     SDL_Rect rect{.x = 0, .y = 0, .w = width, .h = height};
     SDL_BlitSurface(draw_surface, &rect, SDL_GetWindowSurface(window), &rect);
     SDL_UpdateWindowSurface(window);

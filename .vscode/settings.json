@@ -1,5 +1,9 @@
 {
  "C_Cpp.clang_format_fallbackStyle": "Google",
  "editor.formatOnSave": true,
- "files.autoSave": "onFocusChange"
+"files.autoSave": "onFocusChange",
+"files.associations": {
+    "cmath": "cpp",
+    "iostream": "cpp"
+}
 }
