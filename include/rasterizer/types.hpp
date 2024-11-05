@@ -2,15 +2,19 @@
 #include <cstdint>
 
 namespace rasterizer {
+
 struct color4ub {
   std::uint8_t r, g, b, a;
 };
+
 struct vector3f {
   float x, y, z;
 };
+
 struct vector4f {
   float x, y, z, w;
 };
+
 struct matrix4x4f {
   float values[16];
   static matrix4x4f identity() {
@@ -57,6 +61,13 @@ inline vector4f as_point(vector3f const &v) { return {v.x, v.y, v.z, 1.f}; }
 
 inline vector4f operator-(vector4f const &v0, vector4f const &v1) {
   return {v0.x - v1.x, v0.y - v1.y, v0.z - v1.z, v0.w - v1.w};
+}
+inline vector4f operator+(vector4f const &v0, vector4f const &v1) {
+  return {v0.x + v1.x, v0.y + v1.y, v0.z + v1.z, v0.w + v1.w};
+}
+
+inline vector4f operator*(float s, vector4f const &c) {
+  return {s * c.x, s * c.y, s * c.z, s * c.w};
 }
 inline float det2D(vector4f const &v0, vector4f const &v1) {
   return v0.x * v1.y - v0.y * v1.x;
