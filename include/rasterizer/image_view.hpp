@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include <rasterizer/types.hpp>
+#include <rasterizer/vector.hpp>
 
 namespace rasterizer {
 struct image_view {

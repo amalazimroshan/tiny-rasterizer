@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <rasterizer/color.hpp>
 #include <rasterizer/renderer.hpp>
 using namespace rasterizer;
 
@@ -21,6 +22,7 @@ int main() {
 
   using clock = std::chrono::high_resolution_clock;
   auto last_frame_start = clock::now();
+  float time = 0.f;
 
   bool running = true;
   while (running) {
@@ -45,6 +47,8 @@ int main() {
           mouse_x = event.motion.x;
           mouse_y = event.motion.y;
           break;
+        case SDL_KEYDOWN:
+          if (event.key.keysym.sym == SDLK_ESCAPE) running = false;
         default:
           break;
       }
@@ -67,33 +71,47 @@ int main() {
         .width = (std::uint32_t)width,
         .height = (std::uint32_t)height,
     };
+
+    viewport viewport{.xmin = 0,
+                      .ymin = 0,
+                      .xmax = (std::int32_t)color_buffer.width,
+                      .ymax = (std::int32_t)color_buffer.height};
     clear(color_buffer, {0.8f, 0.9f, 1.f, 1.f});
 
-    vector3f positions[] = {
-        {0.f, 0.f, 0.f},
-        {100.f, 0.f, 0.f},
-        {0.f, 100.f, 0.f},
+    vector3f positions[]{
+        {-0.5f, -0.5f, 0.f},
+        {-0.5f, 0.5f, 0.f},
+        {0.5f, -0.5f, 0.f},
+        {0.5f, 0.5f, 0.f},
     };
-    vector4f colors[] = {
-        {1.f, 0.f, 0.f, 1.f},
-        {0.f, 1.f, 0.f, 1.f},
-        {0.f, 0.f, 1.f, 1.f},
+
+    vector4f colors[]{
+        {1.f, 0.f, 0.f},
+        {0.f, 1.f, 0.f},
+        {0.f, 0.f, 1.f},
+        {1.f, 1.f, 1.f},
     };
-    for (int i = 0; i < 100; ++i) {
-      draw(color_buffer,
-           draw_command{.mesh =
-                            {
-                                .positions = {positions},
-                                .colors = {colors},
-                                .vertex_count = 3,
-                            },
-                        .transform = {
-                            1.f, 0.f, 0.f, mouse_x + 100.f * (i % 10),  //
-                            0.f, 1.f, 0.f, mouse_y + 100.f * (i / 10),  //
-                            0.f, 0.f, 1.f, 0.f,                         //
-                            0.f, 0.f, 0.f, 1.f,                         //
-                        }});
-    }
+
+    std::uint32_t indices[]{
+        0, 1, 2,  //
+        2, 1, 3,  //
+    };
+
+    time += dt;
+    matrix4x4f transform = matrix4x4f::rotateZX(time);
+
+    draw(color_buffer, viewport,
+         draw_command{
+             .mesh =
+                 {
+                     .positions = {positions},
+                     .colors = {colors},
+                     .indices = indices,
+                     .count = 6,
+                 },
+             .transform = transform,
+         });
+
     SDL_Rect rect{.x = 0, .y = 0, .w = width, .h = height};
     SDL_BlitSurface(draw_surface, &rect, SDL_GetWindowSurface(window), &rect);
     SDL_UpdateWindowSurface(window);

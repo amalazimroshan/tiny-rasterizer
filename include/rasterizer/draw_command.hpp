@@ -1,4 +1,5 @@
 #pragma once
+#include <rasterizer/matrix.hpp>
 #include <rasterizer/mesh.hpp>
 #include <rasterizer/settings.hpp>
 
